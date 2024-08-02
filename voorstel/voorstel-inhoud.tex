@@ -2,54 +2,122 @@
 
 \section{Introductie}%
 \label{sec:introductie}
-In dit onderzoek proberen we de visibiliteit  van het netwerk te verbeteren aan de hand van network flow monitoring. Een flow kan je zien als een aggregaat van alle informatie over netwerk pakketten in een sessie. Bij netwerk flow monitoring proberen we hier zicht op te krijgen.
+SmartEye is een netwerk serviceprovider die Infrastructure as a Service voor projecten vanaf 8 aansluitingen aanbiedt in hetzelfde gebouw, ongeacht de mix van individuele appartementen, studentenkamers, commerciële ruimten tot gemeenschap zoals kantoren, co-working, lift, tuin, parking.~\autocite{Smarteye2021}
+
+Als telecomoperator dient SmartEye te voldoen aan een reeks verplichtingen, opgelegd door het BIPT (Belgisch Instituut voor postdiensten en telecommunicatie). Zo is op een niet-exhaustieve lijst onder ‘Verplichtingen rond (persoons)\-gegevens en privacy / Identificatie van eindgebruikers’ volgende verplichting terug te vinden: “Een operator is verplicht de abonnees op zijn elektronische communicatiediensten te identificeren (directe identificatiemethode), of er ten minste voor te zorgen dat de autoriteiten hen kunnen identificeren (indirecte identificatiemethode).”~\autocite{BIPT2023}
+
+Stel nu dat bevoegde overheidsinstanties een threat kunnen backtracen tot een door SmartEye beheerde netwerkomgeving, kan SmartEye vervolgens de locatie (een ruimte binnen het gebouw) van de potentële threat actor identificeren?
+
+Aansluitend bij deze vraag wil SmartEye logischerwijze ook proactief kunnen inspelen op potentiële vragen van de bevoegde overheidsinstanties door mogelijke threats ten allen tijde reeds zelf te onderkennen.
+
+Aan de hand van een literatuurstudie en een proof of concept (PoC) willen we een antwoord geven op bovenstaande onderzoeksvraag. Met betrekking tot de bijkomende vraag van Smart\-Eye, zal de PoC zich echter wel beperken tot het detecteren van netwerkscans als threats, om vervolgens de threat actors te identificeren binnen de door SmartEye beheerde netwerken.
 %---------- Stand van zaken ---------------------------------------------------
 
-\section{State-of-the-art}%
+\section{Stand van zaken}%
 \label{sec:state-of-the-art}
 
-Hier beschrijf je de \emph{state-of-the-art} rondom je gekozen onderzoeksdomein, d.w.z.\ een inleidende, doorlopende tekst over het onderzoeksdomein van je bachelorproef. Je steunt daarbij heel sterk op de professionele \emph{vakliteratuur}, en niet zozeer op populariserende teksten voor een breed publiek. Wat is de huidige stand van zaken in dit domein, en wat zijn nog eventuele open vragen (die misschien de aanleiding waren tot je onderzoeksvraag!)?
+\subsection{Netwerkoverwegingen}
 
-Je mag de titel van deze sectie ook aanpassen (literatuurstudie, stand van zaken, enz.). Zijn er al gelijkaardige onderzoeken gevoerd? Wat concluderen ze? Wat is het verschil met jouw onderzoek?
+\paragraph{Publieke IPv4 adressen}
+\emph{Kan SmartEye niet iedereen gewoon een publiek IPv4 geven? }
 
-Verwijs bij elke introductie van een term of bewering over het domein naar de vakliteratuur, bijvoorbeeld~\autocite{Hykes2013}! Denk zeker goed na welke werken je refereert en waarom.
+Neen. Zo goed als alle beschikbare IPv4-ranges werden immers reeds door het IANA~\autocite{ICANN2012} en de onderliggende Regional Internet Registries\\\autocite{Gerich1993} (RIR’s) uitgedeeld. Voor België gebeurde dit door het RIPE NCC.
 
-Draag zorg voor correcte literatuurverwijzingen! Een bronvermelding hoort thuis \emph{binnen} de zin waar je je op die bron baseert, dus niet er buiten! Maak meteen een verwijzing als je gebruik maakt van een bron. Doe dit dus \emph{niet} aan het einde van een lange paragraaf. Baseer nooit teveel aansluitende tekst op eenzelfde bron.
+Op 25 november 2019 echter, kondigde het \textcite{RIPE_NCC2019}  aan dat alle beschikbare ranges (/8, /22 of /22 als combinatie van /23’s en/of /24’s) uitgeput waren. Local Internet Registries (LIR’s) kunnen zich enkel nog voor een wachtlijst aanmelden om eventueel ooit één /24 te bekomen.
 
-Als je informatie over bronnen verzamelt in JabRef, zorg er dan voor dat alle nodige info aanwezig is om de bron terug te vinden (zoals uitvoerig besproken in de lessen Research Methods).
+Getuige van dit schrijnend tekort is het statement van~\textcite{Neuckens2022} bij Proximus, dat zij hun laatste IPv4-blok van het RIPE NCC ontvingen in 2012.
+
+\paragraph{NAT}
+\emph{Hoe kunnen we dit oplossen binnen een IPv4-context?}
+
+Traditionele Network Address Translation (NAT) stelt hosts binnen een privé-netwerk~\autocite{Moskowitz1996} in staat om transparant toegang te krijgen tot hosts in het externe netwerk (zoals het internet).
+
+NAPT~\autocite{Holdrege1999} breidt het begrip ‘translation’ een stap verder uit door ook de transport identifier te vertalen (bijv. TCP en UDP poortnummers en ICMP query identifiers). Hierdoor kunnen de transport identifiers van een aantal privé-hosts gemultiplext worden tot de\\transport identifiers van een enkel extern adres. Met NAPT kan een verzameling hosts dus een enkel extern adres delen.
+
+\paragraph{Carrier-Grade NAT}
+SmartEye krijgt door een Internet Service Provider (ISP) per locatie één binnenkomend publiek IP, dat gedeeld wordt door meerdere tenants (huurders, eindgebruikers).\\ Daarom dienen alle NAT-translaties deterministisch~\autocite{Donley2014} te zijn ofwel gelogd~\autocite{Perreault2013} te worden indien deze dynamisch zijn. Zodoende wordt Carrier-Grade NAT geïmplementeerd. Identificatie van de potentiële threat actor is anders immers niet mogelijk.
+
+\paragraph{Publieke IPv6 adressen}
+\emph{Kunnen we dit oplossen door over te stappen op IPv6-context?}
+
+Ja. Echter, vanuit een IPv6-context moet men nog steeds het IPv4 gebaseerde deel van het internet kunnen bereiken. Hoewel hiervoor door de Internet Engineering Task Force (IETF) oplossingen~\autocite{Arkko2011} werden uitgewerkt, blijft de vereiste geldig dat een en ander deterministisch dient te gebeuren of gelogd moet worden. Bovendien is het essentieel om aan te stippen dat SmartEye vandaag de dag IPv4 only is.
+
+\subsection{Datacaptatie en -export}
+\emph{Welke technologieën kunnen nu het loggen van NAT-translaties faciliteren en een zicht geven op verdachte netwerktrafiek?}
+
+\paragraph{Netflow}
+NetFlow werd door Cisco ontwikkeld als feature voor zijn routers. Essentiële versies zijn versie 5, die IPv4 only is, en versie 9, die zowel met IPv4 als IPv6 overweg kan. Waar bij versie 5~\autocite{Cisco2007} de velden qua inhoud vastliggen, is versie 9~\autocite{Claise2004} template gebaseerd waardoor de inhoud van de velden toewijsbaar is.
+\paragraph{IPFIX}
+IPFIX (Internet Protocol Flow Information Export)~\autocite{Aitken2013} is dan weer een door het IETF uitgewerkte standaard, gebaseerd op Netflow versie 9. De specificaties zijn terug te vinden in de RFC’s 7011 tot en met RFC 7015, en in RFC 5103.
+\paragraph{sFlow}
+Waar bij NetFlow en IPFIX een pakket-\\aggregatie op layer 3 plaatsgrijpt, vindt er bij sFlow sampling plaats op layer 2. sFlow~\autocite{Phaal2004} werd ontwikkeld door InMon Corporation.
 
 % Voor literatuurverwijzingen zijn er twee belangrijke commando's:
 % \autocite{KEY} => (Auteur, jaartal) Gebruik dit als de naam van de auteur
 %   geen onderdeel is van de zin.
 % \textcite{KEY} => Auteur (jaartal)  Gebruik dit als de auteursnaam wel een
 %   functie heeft in de zin (bv. ``Uit onderzoek door Doll & Hill (1954) bleek
-%   ...'')
-
-Je mag deze sectie nog verder onderverdelen in subsecties als dit de structuur van de tekst kan verduidelijken.
+%   ...'')S
 
 %---------- Methodologie ------------------------------------------------------
 \section{Methodologie}%
 \label{sec:methodologie}
 
-Hier beschrijf je hoe je van plan bent het onderzoek te voeren. Welke onderzoekstechniek ga je toepassen om elk van je onderzoeksvragen te beantwoorden? Gebruik je hiervoor literatuurstudie, interviews met belanghebbenden (bv.~voor requirements-analyse), experimenten, simulaties, vergelijkende studie, risico-analyse, PoC, \ldots?
+We opteren voor een \textbf{proof of concept} (PoC) die zich zal beperken tot het detecteren van netwerkscans als threats, om vervolgens de threat actors te identificeren binnen de door SmartEye beheerde netwerken. Niet de volledigheid van de oplossing, maar de correctheid en werkbaarheid moet immers aangetoond worden.
 
-Valt je onderwerp onder één van de typische soorten bachelorproeven die besproken zijn in de lessen Research Methods (bv.\ vergelijkende studie of risico-analyse)? Zorg er dan ook voor dat we duidelijk de verschillende stappen terug vinden die we verwachten in dit soort onderzoek!
+Vanuit ook de businessvereiste om tot een oplossing te komen met een minimale kost, zal er voor geopteerd worden om de oplossing op basis van deterministische NAT-translaties in eerste instantie verder uit te werken. Aan het loggen van alle translaties hangt immers een stevig storageprijskaartje. Het BIPT vereist immers om over de historiek van een jaar te beschikken.
 
-Vermijd onderzoekstechnieken die geen objectieve, meetbare resultaten kunnen opleveren. Enquêtes, bijvoorbeeld, zijn voor een bachelorproef informatica meestal \textbf{niet geschikt}. De antwoorden zijn eerder meningen dan feiten en in de praktijk blijkt het ook bijzonder moeilijk om voldoende respondenten te vinden. Studenten die een enquête willen voeren, hebben meestal ook geen goede definitie van de populatie, waardoor ook niet kan aangetoond worden dat eventuele resultaten representatief zijn.
+Op basis van een \textbf{literatuurstudie} zal eerst de haalbaarheid van een op deterministische NAT-translaties gebaseerde oplossing bekeken worden. Vervolgens zal de haalbaarheid effectief getest worden aan de hand van een PoC. Ook zal de literatuurstudie de mogelijkheden van IPv4 versus IPv6 onderzoeken.
 
-Uit dit onderdeel moet duidelijk naar voor komen dat je bachelorproef ook technisch voldoen\-de diepgang zal bevatten. Het zou niet kloppen als een bachelorproef informatica ook door bv.\ een student marketing zou kunnen uitgevoerd worden.
+\subsection{MoSCoW-analyse}
 
-Je beschrijft ook al welke tools (hardware, software, diensten, \ldots) je denkt hiervoor te gebruiken of te ontwikkelen.
+Een eerste MoSCoW-analyse brengt reeds volgende inzichten op functioneel vlak:
+\begin{itemize}
+    \item Must have
+        \begin{itemize}
+            \item Detecteren van threats
+            \item Identificeren van threat actors
+        \end{itemize}
+    \item Should have
+        \begin{itemize}
+            \item DHCP-logging omdat louter de NAT-\\informatie onvoldoende is voor identificatie binnen een DHCP-gebaseerd netwerk.
+        \end{itemize}
+    \item Could have
+        \begin{itemize}
+            \item Deze werden in dit stadium van de opdracht nog niet gedetecteerd.
+        \end{itemize}
+    \item Won't have
+        \begin{itemize}
+            \item  Complexe threatdetecties. Enkel het onderkennen van netwerkscans maakt deel uit van deze PoC.
+            \item Geolocatiebepalingen
+        \end{itemize}
+\end{itemize}
 
-Probeer ook een tijdschatting te maken. Hoe lang zal je met elke fase van je onderzoek bezig zijn en wat zijn de concrete \emph{deliverables} in elke fase?
+\subsection{Fasering}
+
+\begin{itemize}
+    \item Literatuurstudie
+        \begin{itemize}
+            \item Tijdbesteding: 50\%
+            \item Deliverables: een duidelijk zicht geven op de mogelijke oplossingsrichtingen
+        \end{itemize}
+    \item Requirements-analyse
+        \begin{itemize}
+            \item Tijdbesteding: 10\%
+            \item Deliverables: duidelijk aangeven wat  de preferente oplossing is
+        \end{itemize}
+    \item PoC
+        \begin{itemize}
+            \item Tijdbesteding: 40\%
+            \item Deliverables: bewijs leveren van het feit dat de preferente oplossing implementeerbaar is en voldoet aan de gestelde requirements
+        \end{itemize}
+\end{itemize}
 
 %---------- Verwachte resultaten ----------------------------------------------
-\section{Verwacht resultaat, conclusie}%
+\section{Verwacht resultaat}%
 \label{sec:verwachte_resultaten}
 
-Hier beschrijf je welke resultaten je verwacht. Als je metingen en simulaties uitvoert, kan je hier al mock-ups maken van de grafieken samen met de verwachte conclusies. Benoem zeker al je assen en de onderdelen van de grafiek die je gaat gebruiken. Dit zorgt ervoor dat je concreet weet welk soort data je moet verzamelen en hoe je die moet meten.
+Wanneer bevoegde overheidsinstanties een threat backtracen tot een door SmartEye beheerde netwerkomgeving, moet SmartEye vervolgens de locatie (een ruimte binnen het gebouw) van de potentële threat actor kunnen identificeren. Deze bachelorproef voorziet in deze wettelijke vereiste door een bewezen correcte en werkbare oplossing (PoC) aan te reiken die voldoet aan de vereisten die, én door de regulator gesteld worden, én door SmartEye. De meerwaarde van deze bachelorproef is bijgevolg aangetoond.
 
-Wat heeft de doelgroep van je onderzoek aan het resultaat? Op welke manier zorgt jouw bachelorproef voor een meerwaarde?
-
-Hier beschrijf je wat je verwacht uit je onderzoek, met de motivatie waarom. Het is \textbf{niet} erg indien uit je onderzoek andere resultaten en conclusies vloeien dan dat je hier beschrijft: het is dan juist interessant om te onderzoeken waarom jouw hypothesen niet overeenkomen met de resultaten.
+Deze bachelorproef zal mij veel bijkomend en diepgaand inzicht geven in het netwerkdomein. Het is immers duidelijk dat meerdere RFC’s, toch wel dé referentiedocumenten binnen het netwerkdomein, grondig zullen moeten doorgenomen en bestudeerd worden om tot een gefundeerde stellingname en keuze te komen.
 

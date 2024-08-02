@@ -7,6 +7,7 @@
 % Voor een voorstel in het Engels: voeg de documentclass-optie [english] toe.
 % Let op: kan enkel na toestemming van de bachelorproefcoördinator!
 \documentclass{hogent-article}
+%\usepackage[]{microtype}
 
 % Invoegen bibliografiebestand
 \addbibresource{voorstel.bib}
@@ -20,23 +21,19 @@
 % \course{Bachelor thesis}
 % \assignmenttype{Research proposal}
 
-\academicyear{2023-2024} % TODO: pas het academiejaar aan
+\academicyear{2023-2024}
 
-% TODO: Werktitel
-\title{Network flow monitoring en analyse aan de hand van Ntopng binnen de toepassing van SmartEye}
+\title{Dreigingsanalyse en dreigingswaarschuwing a.d.h.v. netwerkflow data}
 
-% TODO: Studentnaam en emailadres invullen
 \author{Mattias Verscheure}
 \email{mattias.verscheure@student.hogent.be}
 
-% TODO: Medestudent
 % Gaat het om een bachelorproef in samenwerking met een student in een andere
 % opleiding? Geef dan de naam en emailadres hier
 % \author{Yasmine Alaoui (naam opleiding)}
 % \email{yasmine.alaoui@student.hogent.be}
 
-% TODO: Geef de co-promotor op
-\supervisor[Co-promotor]{Jonathan De Graeve(SmartEye, \href{mailto:jonathan@smarteye.eu}{jonathan@smarteye.eu})}
+\supervisor[Co-promotor]{Jonathan De Graeve (SmartEye, \href{mailto:jonathan@smarteye.eu}{jonathan@smarteye.eu})}
 
 % Binnen welke specialisatierichting uit 3TI situeert dit onderzoek zich?
 % Kies uit deze lijst:
@@ -50,12 +47,12 @@
 %   zelf
 %
 \specialisation{System \& Network Administrator}
-\keywords{NetFlow, sFlow, IPFIX, Ntopng, Monitoring}
+\keywords{Networking, Cybersecurity, IPv4, IPv6, threat detection}
 
 \begin{document}
 
 \begin{abstract}
-  Hier schrijf je de samenvatting van je voorstel, als een doorlopende tekst van één paragraaf. Let op: dit is geen inleiding, maar een samenvattende tekst van heel je voorstel met inleiding (voorstelling, kaderen thema), probleemstelling en centrale onderzoeksvraag, onderzoeksdoelstelling (wat zie je als het concrete resultaat van je bachelorproef?), voorgestelde methodologie, verwachte resultaten en meerwaarde van dit onderzoek (wat heeft de doelgroep aan het resultaat?).
+    Wanneer bevoegde overheidsinstanties een threat backtracen tot een door SmartEye beheerde netwerkomgeving, moet SmartEye vervolgens de locatie (een ruimte binnen het gebouw) van de potentiële threat actor kunnen identificeren. Aansluitend hierbij wil SmartEye logischerwijze ook proactief kunnen inspelen op potentiële vragen van de bevoegde overheidsinstanties door mogelijke threats ten allen tijde reeds zelf te onderkennen. In een literatuurstudie zullen eerst de oplossingsmogelijkheden in zowel een IPv4- als een IPv6-context bekeken worden. Om te voldoen aan de vereisten van de regulator, zal vervolgens ook nagegaan worden of alle NAT-translaties deterministisch kunnen zijn ofwel gelogd dienen te worden indien deze dynamisch zijn. De concrete oplossingsrichting die uit de literatuurstudie zal voortvloeien, zal in een proof of concept getest worden.
 \end{abstract}
 
 \tableofcontents

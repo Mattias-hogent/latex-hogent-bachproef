@@ -91,8 +91,8 @@
     \ifx\@academicyear\@empty{%
       \ClassError{\@classname}{Academic year is undefined!}%
       {Use the \academicyear command to define it}
-    }\fi  
-  
+    }\fi
+
     %% The following variables only need to be defined for a thesis
     \if@thesis
       \ifx\@supervisor\@empty{%
@@ -108,7 +108,7 @@
               {Use the \degreesought command to define it}
       }\fi
     \fi
-  
+
     %% Since the input is there, set the PDF info
     \hypersetup{%
         pdftitle=\@title,
@@ -166,6 +166,8 @@
     \RequirePackage[backend=biber,style=apa]{biblatex}
     \DeclareLanguageMapping{english}{british-apa}
 \fi
+\RequirePackage{lineno}
+\RequirePackage{fvextra}
 \RequirePackage{csquotes}
 
 \RequirePackage[small,bf,nooneline,footnotesize]{caption}
@@ -221,6 +223,7 @@
 \usetikzlibrary{positioning}
 \RequirePackage{standalone}
 \RequirePackage{wrapfig}
+\graphicspath{{../graphics/}}
 
 % Page layout & document structure
 \RequirePackage{appendix}
@@ -243,8 +246,6 @@
 \RequirePackage{titletoc}
 \RequirePackage[nottoc]{tocbibind}
 \RequirePackage{url}
-
-\captionsetup[figure]{labelformat=parens, labelsep=newline}
 
 % Typography & Symbols
 \RequirePackage{eurosym}
@@ -363,7 +364,7 @@
         \setsansfont{Montserrat}
     }{%
         \newfontfamily\titlefont{Montserrat}[
-            Path = fonts/Montserrat/,
+            Path = ../fonts/Montserrat/,
             Extension = .otf,
             UprightFont = *-Black, %% Force black
             BoldFont=*-Black,
@@ -371,7 +372,7 @@
             BoldItalicFont= *-BlackItalic]
 
         \newfontfamily\subtitlefont{Montserrat}[
-            Path = fonts/Montserrat/,
+            Path = ../fonts/Montserrat/,
             Extension = .otf,
             UprightFont = *-ExtraBold, %% Force extra bold
             BoldFont=*-ExtraBold,
@@ -379,7 +380,7 @@
             BoldItalicFont= *-ExtraBoldItalic]
 
         \newfontfamily\tocfont{Montserrat}[
-            Path = fonts/Montserrat/,
+            Path = ../fonts/Montserrat/,
             Extension = .otf,
             UprightFont = *-Regular,
             BoldFont=*-Bold,
@@ -387,7 +388,7 @@
             BoldItalicFont= *-BoldItalic]
 
         \setmainfont{Montserrat}[
-            Path = fonts/Montserrat/,
+            Path = ../fonts/Montserrat/,
             Extension = .otf,
             UprightFont = *-Regular,
             BoldFont=*-Bold,
@@ -437,7 +438,7 @@
 
 %% Use the length of the 'HO' part of the logo to set the padding of the logo
 \newsavebox{\logopart}
-\savebox{\logopart}{\includegraphics[height=2cm]{graphics/logopart}}
+\savebox{\logopart}{\includegraphics[height=2cm]{logopart}}
 
 %% We use A4 paper with slightly smaller margins than the default (scale = 0.7)
 \geometry{a4paper,hscale=0.75,vscale=0.8,headheight=14pt,asymmetric}
@@ -452,13 +453,13 @@
 \if@titlepage%
   \renewcommand{\maketitle}{\thispagestyle{empty}\begin{titlepage}%
     \@checkvariables
-    
+
     %% Change the geometry so the notes section doesn't bother us
     \newgeometry{top=2cm,bottom=\wd\logopart,left=1.5cm,right=1.5cm}
-    
+
     %% Add whitespace at the top
     %\addvspace{10\bigskipamount}
-    
+
     \begingroup
       %% Print the title in the faculty color
       \titlefont\color{title}\Huge\@title\@addpunct{.}\\
@@ -474,9 +475,9 @@
       %% Print the name of the author
       \subtitlefont\Large\bfseries \@author\@addpunct{.}
     \endgroup
-    
+
     \vfill
-    
+
     \if@thesis
       \begingroup
         \IfLanguageName{dutch}{%
@@ -488,10 +489,10 @@
         }
       \endgroup
     \fi
-    
+
     \bigskip
     \bigskip
-    
+
     \if@thesis
       \begingroup
           \IfLanguageName{dutch}{%
@@ -518,7 +519,7 @@
               \fi
           \IfLanguageName{dutch}{examenperiode}{exam period} } \\
       \endgroup
-      
+
       \bigskip
     \else
         \IfLanguageName{dutch}{%
@@ -527,7 +528,7 @@
     \begingroup
       \subtitlefont\bfseries\@departmentname\@addpunct{.}
     \endgroup
-    
+
     %% Insert the HoGent logo
     \begin{tikzpicture}[remember picture, overlay]
       \node [anchor=south east, shift={(-\the\wd\logopart, \the\wd\logopart)}, inner sep=0, outer sep=0] (logo) at (current page.south east)%
@@ -537,7 +538,7 @@
     \end{tikzpicture}
 
     \end{titlepage}%
-    
+
     \thispagestyle{empty}
     \null\clearpage\restoregeometry
   }

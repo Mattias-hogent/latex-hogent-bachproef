@@ -14,57 +14,53 @@
 \usepackage{lipsum} % For blind text, can be removed after adding actual content
 
 %% Pictures to include in the text can be put in the graphics/ folder
-\graphicspath{{graphics/}}
+\graphicspath{{../graphics/}}
 
 %% For source code highlighting, requires pygments to be installed
 %% Compile with the -shell-escape flag!
-\usepackage[section]{minted}
+%% \usepackage[chapter]{minted}
 %% If you compile with the make_thesis.{bat,sh} script, use the following
 %% import instead:
-%% \usepackage[section,outputdir=../output]{minted}
+\usepackage[chapter]{minted}
 \usemintedstyle{solarized-light}
-\definecolor{bg}{RGB}{253,246,227} %% Set the background color of the codeframe
 
-%% Change this line to edit the line numbering style:
-\renewcommand{\theFancyVerbLine}{\ttfamily\scriptsize\arabic{FancyVerbLine}}
+%% Formatting for minted environments.
+\setminted{%
+    autogobble,
+    frame=lines,
+    breaklines,
+    linenos,
+    tabsize=4
+}
 
-%% Macro definition to load external java source files with \javacode{filename}:
-\newmintedfile[javacode]{java}{
-    bgcolor=bg,
-    fontfamily=tt,
-    linenos=true,
-    numberblanklines=true,
-    numbersep=5pt,
-    gobble=0,
-    framesep=2mm,
-    funcnamehighlighting=true,
-    tabsize=4,
-    obeytabs=false,
-    breaklines=true,
-    mathescape=false
-    samepage=false,
-    showspaces=false,
-    showtabs =false,
-    texcl=false,
+%% Ensure the list of listings is in the table of contents
+\renewcommand\listoflistingscaption{%
+    \IfLanguageName{dutch}{Lijst van codefragmenten}{List of listings}
+}
+\renewcommand\listingscaption{%
+    \IfLanguageName{dutch}{Codefragment}{Listing}
+}
+\renewcommand*\listoflistings{%
+    \cleardoublepage\phantomsection\addcontentsline{toc}{chapter}{\listoflistingscaption}%
+    \listof{listing}{\listoflistingscaption}%
 }
 
 % Other packages not already included can be imported here
 
 %%---------- Document metadata -------------------------------------------------
 % TODO: Replace this with your own information
-\author{Ernst Aarden}
-\supervisor{Dhr. F. Van Houte}
-\cosupervisor{Mevr. S. Beeckman}
-\title[Optionele ondertitel]%
-    {Titel van de bachelorproef}
+\author{Mattias Verscheure}
+\supervisor{Dhr. J. Courtens}
+\cosupervisor{Dhr. J. De Graeve}
+\title{Dreigingsanalyse en dreigingswaarschuwing a.d.h.v. netwerkflow data.}
 \academicyear{\advance\year by -1 \the\year--\advance\year by 1 \the\year}
-\examperiod{1}
+\examperiod{3}
 \degreesought{\IfLanguageName{dutch}{Professionele bachelor in de toegepaste informatica}{Bachelor of applied computer science}}
 \partialthesis{false} %% To display 'in partial fulfilment'
 %\institution{Internshipcompany BVBA.}
 
 %% Add global exceptions to the hyphenation here
-\hyphenation{back-slash}
+%\hyphenation{back-slash}
 
 %% The bibliography (style and settings are  found in hogentthesis.cls)
 \addbibresource{bachproef.bib}            %% Bibliography file
@@ -115,8 +111,9 @@
 
 % If you included tables and/or source code listings, uncomment the appropriate
 % lines.
-%\listoftables
-%\listoflistings
+\listoftables
+
+\listoflistings
 
 % Als je een lijst van afkortingen of termen wil toevoegen, dan hoort die
 % hier thuis. Gebruik bijvoorbeeld de ``glossaries'' package.
@@ -140,9 +137,8 @@
 % vormen. De structuur en titels hangen af van je eigen onderzoek. Je kan bv.
 % elke fase in je onderzoek in een apart hoofdstuk bespreken.
 
-%\input{...}
-%\input{...}
-%...
+\input{oplossingsanalyse.tex}
+\input{proof_of_concept.tex}
 
 \input{conclusie}
 
@@ -154,7 +150,7 @@
 
 Het onderwerp van deze bachelorproef is gebaseerd op een onderzoeksvoorstel dat vooraf werd beoordeeld door de promotor. Dat voorstel is opgenomen in deze bijlage.
 
-%% TODO: 
+%% TODO:
 %\section*{Samenvatting}
 
 % Kopieer en plak hier de samenvatting (abstract) van je onderzoeksvoorstel.
