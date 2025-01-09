@@ -4,7 +4,16 @@
 
 \chapter{Conclusie}%
 \label{ch:conclusie}
+Het oplossingsvoorstel zoals eerder beschreven, werd als proof of concept gerealiseerd. Evaluatie van deze realisatie leidde tot een tweeledige conclusie: enerzijds kon worden vastgesteld dat de oplossing werkt, maar anderzijds dient ook geconcludeerd te worden dat de oplossing enkel schaalbaar is mits de vereiste van minimale kost (zie 4.3. Haalbaarheidsanalyse en sturing van de oplossing) te laten vallen.
 
+\paragraph{}
+De oplossing gaat bij minimale kost immers uit van het per tenant (huurder en/of eindgebruiker) enkel statisch alloceren van poorten. Door deze werkwijze kan steeds het privaat IP achterhaald worden zonder dat logs moeten bijgehouden worden.
+
+\paragraph{}
+De zwakte bij deze oplossing zit in het feit dat er wel ruim 60000 poorten te verdelen zijn per publiek IP, maar vele tenants hebben niet alleen meerdere devices (smartphone, laptop, game console,…), maar op een device kunnen ook meerdere connecties openstaan. Hierdoor moeten er per tenant enkele honderden poorten voorzien worden.
+
+\paragraph{}
+Logs zullen bijgevolg vereist zijn eens de oplossing moet toegepast worden in gebouwen met heel veel tenants. Gebouwen met enkele tientallen tenants kunnen tegen minimale kost geïmplementeerd worden, gebouwen met honderden tenants zeker niet.
 % TODO: Trek een duidelijke conclusie, in de vorm van een antwoord op de
 % onderzoeksvra(a)g(en). Wat was jouw bijdrage aan het onderzoeksdomein en
 % hoe biedt dit meerwaarde aan het vakgebied/doelgroep?

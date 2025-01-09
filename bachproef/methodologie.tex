@@ -26,3 +26,53 @@
 %% Maak voor elke fase (behalve het literatuuronderzoek) een NIEUW HOOFDSTUK aan
 %% en geef het een gepaste titel.
 
+We opteren voor een \textbf{proof of concept} (PoC) die zich zal beperken tot het detecteren van netwerkscans als threats, om vervolgens de threat actors te identificeren binnen de door SmartEye beheerde netwerken. Niet de volledigheid van de oplossing, maar de correctheid en werkbaarheid moet immers aangetoond worden.
+
+\paragraph{}
+Vanuit ook de businessvereiste om tot een oplossing te komen met een minimale kost, zal er voor geopteerd worden om de oplossing op basis van deterministische NAT-translaties in eerste instantie verder uit te werken. Aan het loggen van alle translaties hangt immers een stevig storageprijskaartje. Het BIPT vereist immers om over de historiek van een jaar te beschikken.
+
+\paragraph{}
+Op basis van een \textbf{literatuurstudie} zal eerst de haalbaarheid van een op deterministische NAT-translaties gebaseerde oplossing bekeken worden. Vervolgens zal de haalbaarheid effectief getest worden aan de hand van een PoC. Ook zal de literatuurstudie de mogelijkheden van IPv4 versus IPv6 onderzoeken.
+
+\section{MoSCoW-analyse}
+
+Een eerste MoSCoW-analyse brengt reeds volgende inzichten op functioneel vlak:
+\begin{itemize}
+    \item Must have
+    \begin{itemize}
+        \item Detecteren van threats
+        \item Identificeren van threat actors
+    \end{itemize}
+    \item Should have
+    \begin{itemize}
+        \item DHCP-logging omdat louter de NAT-\\informatie onvoldoende is voor identificatie binnen een DHCP-gebaseerd netwerk.
+    \end{itemize}
+    \item Could have
+    \begin{itemize}
+        \item Deze werden in dit stadium van de opdracht nog niet gedetecteerd.
+    \end{itemize}
+    \item Won't have
+    \begin{itemize}
+        \item  Complexe threatdetecties. Enkel het onderkennen van netwerkscans maakt deel uit van deze PoC.
+    \end{itemize}
+\end{itemize}
+
+\section{Fasering}
+
+\begin{itemize}
+    \item Literatuurstudie
+    \begin{itemize}
+        \item Tijdbesteding: 50\%
+        \item Deliverables: een duidelijk zicht geven op de mogelijke oplossingsrichtingen
+    \end{itemize}
+    \item Requirements-analyse
+    \begin{itemize}
+        \item Tijdbesteding: 10\%
+        \item Deliverables: duidelijk aangeven wat  de preferente oplossing is
+    \end{itemize}
+    \item PoC
+    \begin{itemize}
+        \item Tijdbesteding: 40\%
+        \item Deliverables: bewijs leveren van het feit dat de preferente oplossing implementeerbaar is en voldoet aan de gestelde requirements
+    \end{itemize}
+\end{itemize}

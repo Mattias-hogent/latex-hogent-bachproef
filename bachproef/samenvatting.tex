@@ -44,3 +44,11 @@
 % De samenvatting in de hoofdtaal van het document
 
 \chapter*{\IfLanguageName{dutch}{Samenvatting}{Abstract}}
+SmartEye, een netwerk serviceprovider die Infrastructure as a Service voor projecten vanaf 8 aansluitingen aanbiedt in hetzelfde gebouw, wou een oplossing als antwoord op volgende onderzoeksvraag:
+\paragraph{}
+Stel dat bevoegde overheidsinstanties een threat kunnen backtracen tot een door SmartEye beheerde netwerkomgeving, hoe kan SmartEye vervolgens de locatie (een ruimte binnen het gebouw) van de potentiële threat actor identificeren? Aansluitend bij deze vraag wil SmartEye logischerwijze ook proactief kunnen inspelen op potentiële vragen van de bevoegde overheidsinstanties. Hoe kunnen mogelijke threats ten alle tijde reeds zelf onderkend worden?
+\paragraph{}
+Het oplossingsvoorstel, gebaseerd op carrier-grade NAT, werd als proof of concept gerealiseerd. Evaluatie van deze realisatie leidde tot een tweeledige conclusie: enerzijds kon worden vastgesteld dat de oplossing werkt, maar anderzijds dient ook geconcludeerd te worden dat de oplossing enkel schaalbaar is mits de vereiste van minimale kost laten vallen.
+De oplossing gaat bij minimale kost immers uit van het per tenant (huurder en/of eindgebruiker) enkel statisch alloceren van poorten. Door deze werkwijze kan steeds het privaat IP achterhaald worden zonder dat logs moeten bijgehouden worden.
+\paragraph{}
+Logs zullen bijgevolg vereist zijn eens de oplossing moet toegepast worden in gebouwen met heel veel tenants. Gebouwen met enkele tientallen tenants kunnen tegen minimale kost geïmplementeerd worden, gebouwen met honderden tenants zeker niet.
