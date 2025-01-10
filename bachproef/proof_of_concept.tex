@@ -2,11 +2,25 @@
 
 \section{Componentkeuze}
 
-\begin{figure}[!htbp]
+\begin{figure}[H]
     \includesvg[width=\textwidth]{./graphics/4-Oplossing_totaal.svg}
     \caption[short description]{elaborate description}
     \label{fig:Componentkeuze}
 \end{figure}
+
+Bij de opzet van de proof of concept werd geopteerd om dit in een gevirtualiseerde omgeving te doen. Als virtualisatie omgeving werd voor XCP-ng als hypervisor gekozen in combinatie met Xen Orchestra als management omgeving. Een dergelijke opzet biedt enterprise level maturiteit. Bovendien beschikt de gratis versie over alle voor deze proof of concept vereiste functionaliteit, evenwel zonder support.
+
+\paragraph{}
+Standaard beschikt XCP-ng niet over een ISO store waardoor deze zelf via de command line diende aangemaakt te worden. Een eerste Ubuntu ISO kon zo vervolgens ook vanop de command line gedeployed worden.
+
+\paragraph{}
+Xen Orchestra kan op GitHub gevonden worden en dient zelf gecompileerd te worden als je niet tot de aankoop van een appliance wil overgaan. Dit compileren kan manueel of via een in de community beschikbaar script gebeuren. Deze laatste werkwijze heeft heel wat voordelen omwille van de in het script aangegeven configuratieopties.
+
+\paragraph{}
+Via een webinterface kunnen vervolgens alle vereiste virtuele servers aangemaakt worden om daarop respectievelijk nProbe, ntopng en OpenSearch te draaien.
+
+\paragraph{}
+De OPNsense firewall daarentegen draait op een eigen bare metal server die geoptimaliseerd is voor netwerktrafiek. Hierop werd na de installatie van de OPNsense ISO een PoC specifiek netwerk en WAN geconfigureerd, als ook een out-of-band netwerk in functie van serverbereikbaarheid.
 
 \subsection{XCP-ng}
 

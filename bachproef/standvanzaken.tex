@@ -33,7 +33,7 @@ Op 25 november 2019 echter, kondigde het \textcite{RIPE_NCC2019}  aan dat alle b
 \end{table}
 
 Traditionele Network Address Translation (NAT) stelt hosts binnen een privé-netwerk~\autocite{Moskowitz1996} in staat om transparant toegang te krijgen tot hosts in het externe netwerk (zoals het internet).
-Hierbij gebeurt een tijdelijke mapping van private op publieke IP-adressen. Een gevolg hiervan is dat het backtracen van een threat niet meer mogelijk is.
+Hierbij gebeurt een tijdelijke mapping van private op publieke IPv4-adressen. Een gevolg hiervan is dat het backtracen van een threat niet meer mogelijk is. Het IANA heeft voor de private IPv4-adressen dan ook specifieke IPv4 ranges gereserveerd zie \ref{tab:PrivateIPv4AdressRanges}
 
 \subsection{NAPT}
 Als uitbreiding op NAT kan met Network Address Port Translation (NAPT) een verzameling hosts een enkel extern adres delen. NAPT~\autocite{Holdrege1999} breidt immers het begrip ‘translation’ een stap verder uit door ook de transport identifier te vertalen (bijv. TCP en UDP poortnummers en ICMP query identifiers). Hierdoor kunnen de transport identifiers van een aantal privé-hosts gemultiplext worden tot de\\transport identifiers van een enkel extern adres.
@@ -50,17 +50,17 @@ Als uitbreiding op NAT kan met Network Address Port Translation (NAPT) een verza
     \end{tabular}
 \end{table}
 
-SmartEye krijgt door een Internet Service Provider (ISP) per locatie één binnenkomend publiek IP, dat gedeeld wordt door meerdere tenants (huurders, eindgebruikers). Gezien uiteindelijk de identificatie van de potentiële threat actor vereist is, dient Carrier-Grade NAT geïmplementeerd te worden. Hierbij zijn alle NAT-translaties deterministisch~\autocite{Donley2014} of worden ze gelogd~\autocite{Perreault2013} indien ze dynamisch zijn.
+SmartEye krijgt door een Internet Service Provider (ISP) per locatie één binnenkomend publiek IP, dat gedeeld wordt door meerdere tenants (huurders, eindgebruikers). Gezien uiteindelijk de identificatie van de potentiële threat actor vereist is, dient Carrier-Grade NAT geïmplementeerd te worden. Hierbij zijn alle NAT-translaties deterministisch~\autocite{Donley2014} of worden ze gelogd~\autocite{Perreault2013} indien ze dynamisch zijn. Het IANA heeft hier ook nog een specifieke IPv4 range voor gereserveerd zie \ref{tab:Carrier-GradeNATAdressRanges}
 
 \subsection{Publieke IPv6 adressen}
 Ja. Echter, vanuit een IPv6-context moet men nog steeds het IPv4 gebaseerde deel van het internet kunnen bereiken. Hoewel hiervoor door de Internet Engineering Task Force (IETF) oplossingen~\autocite{Arkko2011} werden uitgewerkt, blijft de vereiste geldig dat een en ander deterministisch dient te gebeuren of gelogd moet worden. Bovendien is het essentieel om aan te stippen dat SmartEye vandaag de dag IPv4 only is.
 
 \subsection{Dual-Stack}
-Om te zorgen dat men toch nog aan het IPv4 internet kunnen  we een native-IPv4 stack te samen met een native-IPv6 stack  draaien. Dit lost echter de problemen die we met IPv4 hadden niet op en verdubbeld de configuratie en het onderhoud.
+Om te zorgen dat men toch nog aan het IPv4 internet kunnen  we een native-IPv4 stack te samen met een native-IPv6 stack  draaien zoals in \textcite{Gilligan2005}. Dit lost echter de problemen die we met IPv4 hadden niet op en verdubbeld de configuratie en het onderhoud.
 
 \subsection{Tunnelling}
 \paragraph{6 in 4}
-Hier gaan we een IPv6 packet encapsuleren in een IPv4 pakket zodat we dit over het bestaande IPv4 netwerk kunnen sturen op deze manier moeten we niet dual-stack draaien maar dit bereid niet voor op een uiteindelijke IPv6 transitie.
+Hier gaan we een IPv6 packet encapsuleren in een IPv4 pakket zodat we dit over het bestaande IPv4 netwerk kunnen sturen zoals in \textcite{Gilligan2005}. Op deze manier moeten we niet dual-stack draaien en kunnen we snel IPv6 kan uitrollen over de bestaand IPv4 infrastructuur maar dit bereid niet voor op een uiteindelijke IPv6 transitie.
 
 %TODO: 6RD
 
