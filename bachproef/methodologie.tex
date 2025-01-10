@@ -26,53 +26,32 @@
 %% Maak voor elke fase (behalve het literatuuronderzoek) een NIEUW HOOFDSTUK aan
 %% en geef het een gepaste titel.
 
-We opteren voor een \textbf{proof of concept} (PoC) die zich zal beperken tot het detecteren van netwerkscans als threats, om vervolgens de threat actors te identificeren binnen de door SmartEye beheerde netwerken. Niet de volledigheid van de oplossing, maar de correctheid en werkbaarheid moet immers aangetoond worden.
+\begin{figure}[!htbp]
+    \includesvg[width=\textwidth]{./graphics/1- Analyse.svg}
+    \caption[Requirements and Capability]{elaborate description}
+    \label{fig:RequirementsCapability}
+\end{figure}
 
 \paragraph{}
-Vanuit ook de businessvereiste om tot een oplossing te komen met een minimale kost, zal er voor geopteerd worden om de oplossing op basis van deterministische NAT-translaties in eerste instantie verder uit te werken. Aan het loggen van alle translaties hangt immers een stevig storageprijskaartje. Het BIPT vereist immers om over de historiek van een jaar te beschikken.
+Tijdens de \textbf{literatuurstudie} hebben we nagegaan hoe we het eenduidig verband tussen een threat actor op een netwerk en de eigenlijke tenant kunnen vastleggen. We hebben hiervoor twee pistes bewandeld.
 
 \paragraph{}
-Op basis van een \textbf{literatuurstudie} zal eerst de haalbaarheid van een op deterministische NAT-translaties gebaseerde oplossing bekeken worden. Vervolgens zal de haalbaarheid effectief getest worden aan de hand van een PoC. Ook zal de literatuurstudie de mogelijkheden van IPv4 versus IPv6 onderzoeken.
+Een eerste piste was om iedere tenant zijn eigen IP te geven. Hier liepen we tegen de limieten van het adresseringsbereik van IPv4. IPv6 met zijn astronomisch addresseringsbereik leek even de oplossing, maar hier botsten we op het feit dat IPv6 momenteel nog nauwelijks ingeburgerd is.
 
-\section{MoSCoW-analyse}
+\paragraph{}
+Een tweede piste was om de mogelijkheden van NAT’ing te bekijken. Hier vonden we uiteindelijk onder de vorm van Carrier-Grade NAT een oplossing voor ons probleem.
 
-Een eerste MoSCoW-analyse brengt reeds volgende inzichten op functioneel vlak:
-\begin{itemize}
-    \item Must have
-    \begin{itemize}
-        \item Detecteren van threats
-        \item Identificeren van threat actors
-    \end{itemize}
-    \item Should have
-    \begin{itemize}
-        \item DHCP-logging omdat louter de NAT-\\informatie onvoldoende is voor identificatie binnen een DHCP-gebaseerd netwerk.
-    \end{itemize}
-    \item Could have
-    \begin{itemize}
-        \item Deze werden in dit stadium van de opdracht nog niet gedetecteerd.
-    \end{itemize}
-    \item Won't have
-    \begin{itemize}
-        \item  Complexe threatdetecties. Enkel het onderkennen van netwerkscans maakt deel uit van deze PoC.
-    \end{itemize}
-\end{itemize}
+\paragraph{}
+Om de werkbaarheid van Carrier-Grade NAT aan te tonen, opteerden we ervoor om een \textbf{Proof of Concept} te implementeren.
 
-\section{Fasering}
+\paragraph{}
+We kregen hierbij vanuit SmartEye enkele beperkende randvoorwaarden opgelegd. Als firewall dienden we gebruik te maken van OPNsense, verwerking van flow data diende te gebeuren met behulp van ntopng en alle software diende te draaien op het Ubuntu server operating system.
 
-\begin{itemize}
-    \item Literatuurstudie
-    \begin{itemize}
-        \item Tijdbesteding: 50\%
-        \item Deliverables: een duidelijk zicht geven op de mogelijke oplossingsrichtingen
-    \end{itemize}
-    \item Requirements-analyse
-    \begin{itemize}
-        \item Tijdbesteding: 10\%
-        \item Deliverables: duidelijk aangeven wat  de preferente oplossing is
-    \end{itemize}
-    \item PoC
-    \begin{itemize}
-        \item Tijdbesteding: 40\%
-        \item Deliverables: bewijs leveren van het feit dat de preferente oplossing implementeerbaar is en voldoet aan de gestelde requirements
-    \end{itemize}
-\end{itemize}
+\paragraph{}
+Om threats ten allen tijde te detecteren dienden we flow data te capteren op de firewall en te verwerken op ntopng. Deze laatste staat immers in voor de behavoural checks. Om echter de data op ntopng te krijgen, dienden we nProbe nog als tussenschakel toe te voegen die als data flowcollector fungeert. Eveneens diende bekeken te worden of en hoe de firewall in staat was om data flows te exporteren.
+
+\paragraph{}
+Naast het ten allen tijde detecteren van flow data, diende onze opzet ook nog in staat te zijn om threats eenduidig toewijsbaar te detecteren. Dit hebben we gerealiseerd door op de firewall Carrier-Grade NAT te implementeren. We realiseerden dit met behulp van een Python script dat via de firewall API port ranges per tenant onder de vorm van rules ging opladen.
+
+\paragraph{}
+Om over threats te kunnen rapporteren was het idee om flow data in OpenSearch op te slaan. Toen uit de literatuurstudie bleek dat het eenduidig verband tussen een threat actor op een netwerk en de eigenlijke tenant kon gerealiseerd worden met behulp van Carrier-Grade NAT, leek de noodzaak om flow data op te slaan in functie van rapportering te vervallen. Echter Carrier-Grade NAT bleek slechts sluitend als oplossing zolang het aantal tenants per gebouw beperkt bleef tot enkele tientallen in plaats van vele honderden.
