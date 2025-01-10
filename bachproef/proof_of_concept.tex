@@ -4,7 +4,7 @@
 
 \begin{figure}[H]
     \includesvg[width=\textwidth]{./graphics/4-Oplossing_totaal.svg}
-    \caption[short description]{elaborate description}
+    \caption[short description]{Bovenstaand is aangegeven hoe de verschillende processtappen zich verhouden tot de gebruikte software en de onderliggende hardware waarop een en ander draait.}
     \label{fig:Componentkeuze}
 \end{figure}
 
@@ -23,20 +23,30 @@ Via een webinterface kunnen vervolgens alle vereiste virtuele servers aangemaakt
 De OPNsense firewall daarentegen draait op een eigen bare metal server die geoptimaliseerd is voor netwerktrafiek. Hierop werd na de installatie van de OPNsense ISO een PoC specifiek netwerk en WAN geconfigureerd, als ook een out-of-band netwerk in functie van serverbereikbaarheid.
 
 \subsection{XCP-ng}
+XCP-ng is een high performance enterprise level virtualisatieplatform met een rijk ecosysteem, dat geïntegreerd kan worden in een hele stack om het te beheren en te back-uppen. XCP-ng staat voor Xen Cloud Platform - next generation: het is de moderne opvolger van XCP, oorspronkelijk gecreëerd als een Open Source versie van Citrix XenServer in 2010.~\autocite{Vates2025}
 
 \subsection{Xen Orchestra}
+Xen Orchestra is als webinterface ontworpen om XCP-ng pools te beheren en om een compleet overzicht te geven van de gevirtualiseerde infrastructuur. Zonder agents te installeren op de verschillende hosts, heeft men overal en vanaf elk apparaat toegang tot alles.~\autocite{Vates2025a}
 
 \subsection{Ubuntu Server}
 Gezien SmartEye momenteel zelf gebruiker is van Ubuntu Server voor hun serverinfrastructuur, lag deze keuze voor de hand. Deze open-source Linux-distributie is bovendien gratis en wordt ondersteund door een goede communitywerking.
 
 \subsection{OPNsense}
+OPNsense is een open source, eenvoudig te gebruiken en eenvoudig te bouwen FreeBSD-gebaseerd firewall- en routingplatform. OPNsense omvat de meeste functies die beschikbaar zijn in dure commerciële firewalls, en in veel gevallen zelfs meer.~\autocite{OPNsenseteam2025}
+
 OPNsense is een fork van pfSense. Grootste verschillen tussen beide zijn voornamelijk de frequentie van updates (OPNsense komt met meer kleine updates terwijl pfSense opteert voor minder, maar grotere updates) en meer overzichtelijke user interface van OPNsense. Ook heeft OPNsense een actievere community.
 
 \subsection{nProbe}
+nProbe bevat zowel een NetFlow v5/v9/IPFIX-probe als een collector die kan worden gebruikt om te spelen met NetFlow-stromen. Dit betekent dat nProbe kan worden gebruikt om NetFlow-stromen te verzamelen en exporteren die zijn gegenereerd door border gateways/switches/routers of elk ander apparaat dat kan exporteren in NetFlow v5/v9. Bovendien kan het gecontroleerde stromen naar een collector te sturen, zoals de open-source ntopng.~\autocite{ntop2025}
 
 \subsection{ntopng}
+Er zijn twee populaire methoden die directe toegang bieden tot de daadwerkelijke pakketten die over netwerken gaan. Deze twee methoden zijn SPAN (Switched Port Analyzer) poortspiegeling en netwerk TAP (Test AccessPoint).~\autocite{ntop2025a}
+
+\paragraph{}
+ntopng vangt verkeer op van SPAN/mirror-poorten of TAP-apparaten, maar het kan ook gebruikt worden in combinatie met nProbe om NetFlow/sFlow van routers en switches te verzamelen.~\autocite{ntop2025a}
 
 \subsection{Python}
+Python combineert opmerkelijke kracht met zeer duidelijke syntaxis. Het heeft interfaces naar veel system calls en libraries, en is uitbreidbaar in C of C++. Het is ook bruikbaar als een uitbreidingstaal voor applicaties die een programmeerbare interface nodig hebben. Tot slot is Python portable: het draait op veel Unix-varianten, waaronder Linux en macOS, en op Windows.~\autocite{PythonSoftwareFoundation2025}
 
 \section{Implementatie \& configuratie}
 \subsection{Algemene systeemconfiguratie}
@@ -68,7 +78,7 @@ Als een flow 10 seconden geen nieuwe berichten ontvangen heeft, wordt deze ook a
 
 \begin{figure}[!htbp]
     \includegraphics[width=\textwidth]{./graphics/opnsense_netflow_conf.PNG}
-    \caption[OPNsense NetFlow configuratie]{elaborate description}
+    \caption[OPNsense NetFlow configuratie]{Screenshot van OPNsense NetFlow configuratie.}
     \label{fig:FirewallNetflow}
 \end{figure}
 
@@ -77,16 +87,16 @@ De OPNsense firewall draait onderliggend FreeBSD. In onderstaande screenshot gev
 
 \begin{figure}[!htbp]
     \includegraphics[width=\textwidth]{graphics/opnsense_tunables_portrange.PNG}
-    \caption[OPNsense tunables portrange]{elaborate description}
+    \caption[OPNsense tunables portrange]{Screenshot van portrange tunables in OPNsense.}
     \label{fig:FirewallTunables}
 \end{figure}
 
 \paragraph{Het aanmaken van de Carrier-Grade NAT-rules op de firewall via de API}
 Onderstaande screenshot geeft alle Carrier-Grade NAT rules weer die op de firewall werden geïmplementeerd. Deze rules werden opgebouwd met behulp van een Python script.
 
-\begin{figure}[!htbp]
+\begin{figure}[H]
     \includegraphics[width=\textwidth]{graphics/opnsense_cgnat_rules.PNG}
-    \caption[OPNsense met CGN regels]{elaborate description}
+    \caption[OPNsense met CGN regels]{Screenshot van aan gemaakte Carrier-Grade NAT regels naar het draaien van het python script.}
     \label{fig:FirewallCGNRules}
 \end{figure}
 
@@ -213,13 +223,13 @@ Per range worden dan drie API calls richting de firewall gelanceerd om voor zo v
     print(f'{s.status_code}\n{s.text}')
 \end{minted}
 \begin{listing}[!htbp]
-    \caption[Python CGN code]{elaborate description}
+    \caption[Python CGN code]{Python script om via de OPNsense API Carrier-Grade NAT te implementeren}
     \label{code:PythonCGN}
 \end{listing}
 
 \subsection{nProbe}
-\begin{listing}[!htbp]
-    \caption[nProbe configuration]{elaborate description}
+\begin{listing}[H]
+    \caption[nProbe configuration]{De configuratie van nProbe}
     \label{code:nProbeConf}
 
     \begin{minted}{bash}
@@ -230,9 +240,16 @@ Per range worden dan drie API calls richting de firewall gelanceerd om voor zo v
     \end{minted}
 \end{listing}
 
+\begin{itemize}
+    \item ''--collector-port=6343'' zorgt dat nProbe luistert op poort 6343 naar flowdata.
+    \item ''--ntopng=zmq://100.64.0.11:5556'' zorgt dat nProbe via zmq op IPv4-adres 100.64.0.11 met poort 5556 zal verbinden met ntopng.
+    \item ''--zmq-probe-mode'' zorgt dat nProbe de connectie naar ntopng opstart in plaats van ntopng naar nProbe.
+    \item ''-T=”@NTOPNG@”'' zorgt dat nProbe alle informatie die ntopng nodig heeft om correct te functioneren naar ntopng wordt doorgestuurd.
+\end{itemize}
+
 \subsection{ntopng}
-\begin{listing}[!htbp]
-    \caption[ntopng configuration]{elaborate description}
+\begin{listing}[H]
+    \caption[ntopng configuration]{De configuratie van ntopng}
     \label{code:ntopngConf}
 
     \begin{minted}{bash}
@@ -243,6 +260,13 @@ Per range worden dan drie API calls richting de firewall gelanceerd om voor zo v
     \end{minted}
 \end{listing}
 
+\begin{itemize}
+    \item ''--interface=tcp://*:5556c'' zorgt dat ntopng als collect op alle IPv4-adressen op poort 5556 luistert op een connectie met nProbe op te starten.
+    \item ''--https-port=3001'' zorgt dat de ntopng webserver voor https bindt op poort 3001.
+    \item ''--http-port=0'' zorgt dat de ntopng webserver geen http draait.
+    \item ''--local-networks=100.64.0.0/10'' dit zorgt ervoor dat ntopng weet wat de lokale netwerken zijn.
+\end{itemize}
+
 \section{Test}
 We willen met deze test verdachte activiteit door een tenant simuleren. We doen dit door het draaien een nmap scan naar een adres dat aan de andere kant van de firewall gelegen is vanop de (arbitrair gekozen) server met IP 100.64.0.11 en port range 5157 - 5468, waar in dit geval ook ntopng op draait. Bij deze opzet werd het IP statisch toegekend.
 
@@ -251,7 +275,7 @@ Onderstaande output is het resultaat een ‘sudo nmap -p- 192.168.10.1’. Op de
 
 \begin{figure}[H]
     \includegraphics[width=\textwidth]{graphics/nmap_nat_table.PNG}
-    \caption[OPNsense CGN regels in werking deel 1]{elaborate description}
+    \caption[OPNsense CGN regels in werking deel 1]{OPNsense log die toont dat de Carrier-Grade NAT regels gebruikt worden en werken.}
     \label{fig:FirewallGCNWorksA}
 \end{figure}
 
@@ -260,7 +284,7 @@ Onderstaande screenshot geeft de doorgelaten ge-NAT’te trafiek weer. Bemerk da
 
 \begin{figure}[H]
     \includegraphics[width=\textwidth]{graphics/nmap_firewall_table.PNG}
-    \caption[OPNsense CGN regels in werking deel 2]{elaborate description}
+    \caption[OPNsense CGN regels in werking deel 2]{OPNsense log die toont dat alle source ports in de correct portrange zitten.}
     \label{fig:FirewallGCNWorksB}
 \end{figure}
 
@@ -269,7 +293,7 @@ De doorgelaten ge-NAT’te trafiek binnen de source port range 5157 – 5468 wor
 
 \begin{figure}[htb]
     \includegraphics[width=\textwidth]{graphics/nmap_scan_flows.PNG}
-    \caption[ntopng met toekomende flows]{elaborate description}
+    \caption[ntopng met toekomende flows]{Screenshot van binnenkomende flowdata op ntopng.}
     \label{fig:ntopngFlows}
 \end{figure}
 
@@ -278,6 +302,6 @@ Tot slot is het nu ntopng die zorgt voor de beoogde behavioural checks. Hier con
 
 \begin{figure}[htb]
     \includegraphics[width=\textwidth]{graphics/nmap_scan.PNG}
-    \caption[ntopng scan alerts]{elaborate description}
+    \caption[ntopng scan alerts]{Screenshot van werkende alerts op ntopng bij het draaien van een nmap scan.}
     \label{fig:ntopngAlerts}
 \end{figure}

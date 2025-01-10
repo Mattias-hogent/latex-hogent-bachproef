@@ -3,7 +3,7 @@
 
 \begin{figure}[H]
     \includesvg[width=\textwidth]{./graphics/2_Oplossing_b.svg}
-    \caption[short description]{elaborate description}
+    \caption[short description]{Vanuit de firewall service triggert nieuwe firewall data de procesketting van data collecteren en formatteren, analyseren en stockeren.}
     \label{fig:Oplossingsvoorstel}
 \end{figure}
 
@@ -28,7 +28,7 @@ Nieuwe firewall data komt ter beschikking telkens wanneer trafiek de firewall be
 Voor het collecteren en het formateren van de uit de firewall geëxporteerde data doen we beroep op nProbe.
 
 \section{Data analyseren}
-Het analyseren van de data of threat detection gebeurt het behulp van de software ntopgn. Deze beschikt namelijk hiervoor over een ingebouwde functionaliteit. Enkel de gevoeligheid van de threat-detectie moet ingesteld worden door aan te geven waarover en wanneer (= bij het overschrijden van welke threshhold) een alert moet gegenereerd worden. Gegenereerde alerts worden vervolgens op een dashboard weergegeven. Normaal gesproken gaat ntopng met behulp van een pull zijn data op nProbe gaan ophalen. Gezien in een operationale uitrol van deze proof of concept nProbe in de verschillende gebouwen achter een firewall met NAT’ing actief gaan zijn, zal met een push van de data moeten gewerkt worden.
+Het analyseren van de data of threat detection gebeurt het behulp van de software ntopgn. Deze beschikt namelijk hiervoor over een ingebouwde functionaliteit. Enkel de gevoeligheid van de threat-detectie moet ingesteld worden door aan te geven waarover en wanneer (= bij het overschrijden van welke threshhold) een alert moet gegenereerd worden. Gegenereerde alerts worden vervolgens op een dashboard weergegeven. Normaal gesproken gaat ntopng zelf steeds een sessie opzetten richting nProbe. Gezien in een operationale uitrol van deze proof of concept nProbe in de verschillende gebouwen achter een firewall actief zal zijn, zal het nProbe zijn die een sessie richting ntopng moeten initiëren gezien de firewall de inkomende sessies blokkeert.
 
 \section{Data stockeren}
 Vanuit de businessvereiste om tot een oplossing te komen met een minimale kost, wordt geopteerd om een oplossing op basis van deterministische NAT-translaties uit te werken. Aan het loggen van alle translaties (als alternatief) hangt immers een stevig storage-prijskaartje. Het BIPT vereist immers om over de historiek van een jaar te beschikken.\\ Volledigheidshalve zien we als oplossing voor het stockeren van data heil in het gebruik van OpenSearch. Deze omgeving kan met behulp van een bulk export API vanuit ntopng gevoed worden.
